@@ -12,6 +12,7 @@ import {
   IsBoolean,
   IsDateString,
 } from 'class-validator';
+import { dobMatchesAge } from '../../helpers/customDecorators';
 
 export class UpdateInfoRequest implements UpdateInfoRequestInterface {
   @IsNotEmpty()
@@ -44,5 +45,8 @@ export class ValidateUserRequest implements ValidateUserRequestInterface {
 
   @IsNotEmpty()
   @IsDateString()
+  @dobMatchesAge('age', {
+    message: 'The date of birth does not match the age!',
+  })
   dob: Date;
 }
