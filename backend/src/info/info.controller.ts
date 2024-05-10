@@ -1,4 +1,11 @@
-import { Controller, Post, Body, Get } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { InfoService } from './info.service';
 import { UpdateInfoRequest, ValidateUserRequest } from './interfaces';
 import { BaseResponse } from '../interfaces';
@@ -13,14 +20,14 @@ export class InfoController {
   }
 
   @Post('/validateUser')
-  validateUser(
+  async validateUser(
     @Body() bodyRequest: ValidateUserRequest,
   ): Promise<BaseResponse> {
-    return this.infoService.validateUser(bodyRequest);
-  }
-
-  @Get('/test')
-  test() {
-    return 'Test success!';
+    const response = await this.infoService.validateUser(bodyRequest);
+    if (response.errors) {
+      throw new HttpException(response.errors, HttpStatus.BAD_REQUEST);
+    } else {
+      return response;
+    }
   }
 }

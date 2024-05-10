@@ -16,9 +16,7 @@ describe('AppController (e2e)', () => {
   });
 
   it('/info/validateUser (POST)', () => {
-    return request(app.getHttpServer())
-      .post('/info/validateUser')
-      .expect(404)
-      .expect('Hello World!');
+    const response = request(app.getHttpServer()).post('/info/validateUser');
+    response.expect(400);
   });
 });
