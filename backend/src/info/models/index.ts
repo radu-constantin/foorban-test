@@ -8,6 +8,9 @@ import {
   MinLength,
   MaxLength,
   IsNumber,
+  ValidateIf,
+  IsBoolean,
+  IsDateString,
 } from 'class-validator';
 
 export class UpdateInfoRequest implements UpdateInfoRequestInterface {
@@ -34,8 +37,12 @@ export class ValidateUserRequest implements ValidateUserRequestInterface {
   @IsNumber()
   age: number;
 
+  @ValidateIf((user) => user.age >= 18)
+  @IsNotEmpty()
+  @IsBoolean()
   married: boolean;
 
   @IsNotEmpty()
+  @IsDateString()
   dob: Date;
 }
