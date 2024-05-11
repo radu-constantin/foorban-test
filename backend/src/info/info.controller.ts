@@ -25,7 +25,7 @@ export class InfoController {
   ): Promise<BaseResponse> {
     const response = await this.infoService.validateUser(bodyRequest);
     if (response.errors) {
-      throw new HttpException(response.errors, HttpStatus.BAD_REQUEST);
+      throw new HttpException(response, HttpStatus.BAD_REQUEST);
     } else {
       return response;
     }

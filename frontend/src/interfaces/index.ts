@@ -3,15 +3,21 @@ interface ValidationError {
   property: string;
   value?: any;
   constraints?: {
-      [type: string]: string;
+    [type: string]: string;
   };
   children?: ValidationError[];
-  contexts?: {
-  };
+  contexts?: {};
 }
 
 export interface UpdateInfoRequest {
   name: string;
+}
+
+export interface ValidateUserRequest {
+  name: string | undefined;
+  age: number | undefined;
+  married: boolean | undefined;
+  dob: string | undefined;
 }
 
 interface BaseResponseInteface {

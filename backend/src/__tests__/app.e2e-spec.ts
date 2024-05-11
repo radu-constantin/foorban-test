@@ -35,12 +35,12 @@ describe('/info/validateUser POST', () => {
       .send({ name: 'radu c' })
       .expect(400)
       .expect(({ body }) => {
-        expect(body).toHaveLength(2);
-        expect(body[0].constraints).toHaveProperty(
+        expect(body.errors).toHaveLength(2);
+        expect(body.errors[0].constraints).toHaveProperty(
           'isNumber',
           'age must be a number conforming to the specified constraints',
         );
-        expect(body[1].constraints).toHaveProperty(
+        expect(body.errors[1].constraints).toHaveProperty(
           'isNotEmpty',
           'dob should not be empty',
         );
@@ -53,12 +53,12 @@ describe('/info/validateUser POST', () => {
       .send({ name: 'radu c', age: 30, dob: '1994-03-14' })
       .expect(400)
       .expect(({ body }) => {
-        expect(body).toHaveLength(1);
-        expect(body[0].constraints).toHaveProperty(
+        expect(body.errors).toHaveLength(1);
+        expect(body.errors[0].constraints).toHaveProperty(
           'isNotEmpty',
           'married should not be empty',
         );
-        expect(body[0].constraints).toHaveProperty(
+        expect(body.errors[0].constraints).toHaveProperty(
           'isBoolean',
           'married must be a boolean value',
         );
@@ -71,12 +71,12 @@ describe('/info/validateUser POST', () => {
       .send({ name: 'radu c', age: 15, dob: '1994-03-14' })
       .expect(400)
       .expect(({ body }) => {
-        expect(body).toHaveLength(1);
-        expect(body[0].constraints).not.toHaveProperty(
+        expect(body.errors).toHaveLength(1);
+        expect(body.errors[0].constraints).not.toHaveProperty(
           'isNotEmpty',
           'married should not be empty',
         );
-        expect(body[0].constraints).not.toHaveProperty(
+        expect(body.errors[0].constraints).not.toHaveProperty(
           'isBoolean',
           'married must be a boolean value',
         );
@@ -89,9 +89,8 @@ describe('/info/validateUser POST', () => {
       .send({ name: 'radu c', age: 20, married: false, dob: '1994-03-14' })
       .expect(400)
       .expect(({ body }) => {
-        console.log(body);
-        expect(body).toHaveLength(1);
-        expect(body[0].constraints).toHaveProperty(
+        expect(body.errors).toHaveLength(1);
+        expect(body.errors[0].constraints).toHaveProperty(
           'dobMatchesAge',
           'The date of birth does not match the age!',
         );
@@ -104,9 +103,8 @@ describe('/info/validateUser POST', () => {
       .send({ name: 'radu', age: 30, married: false, dob: '1994-03-14' })
       .expect(400)
       .expect(({ body }) => {
-        console.log(body);
-        expect(body).toHaveLength(1);
-        expect(body[0].constraints).toHaveProperty(
+        expect(body.errors).toHaveLength(1);
+        expect(body.errors[0].constraints).toHaveProperty(
           'minLength',
           'The name must contain at least 5 characters!',
         );
