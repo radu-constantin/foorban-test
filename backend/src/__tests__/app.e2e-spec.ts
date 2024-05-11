@@ -29,7 +29,7 @@ describe('/info/validateUser POST', () => {
       });
   });
 
-  test('Only name input results in error messages for missing age and dob', () => {
+  test('Name only input results in error messages for missing age and dob', () => {
     return request(app.getHttpServer())
       .post('/info/validateUser')
       .send({ name: 'radu c' })
@@ -43,6 +43,57 @@ describe('/info/validateUser POST', () => {
         expect(body[1].constraints).toHaveProperty(
           'isNotEmpty',
           'dob should not be empty',
+        );
+      });
+  });
+
+  test('Over 18 age input should raise error that marriage is input is not completed', () => {
+    return request(app.getHttpServer())
+      .post('/info/validateUser')
+      .send({ name: 'radu c', age: 30, dob: '1994-03-14' })
+      .expect(400)
+      .expect(({ body }) => {
+        expect(body).toHaveLength(1);
+        expect(body[0].constraints).toHaveProperty(
+          'isNotEmpty',
+          'married should not be empty',
+        );
+        expect(body[0].constraints).toHaveProperty(
+          'isBoolean',
+          'married must be a boolean value',
+        );
+      });
+  });
+
+  test('Under 18 age input should NOT raise error that marriage is input is not completed', () => {
+    return request(app.getHttpServer())
+      .post('/info/validateUser')
+      .send({ name: 'radu c', age: 15, dob: '1994-03-14' })
+      .expect(400)
+      .expect(({ body }) => {
+        expect(body).toHaveLength(1);
+        expect(body[0].constraints).not.toHaveProperty(
+          'isNotEmpty',
+          'married should not be empty',
+        );
+        expect(body[0].constraints).not.toHaveProperty(
+          'isBoolean',
+          'married must be a boolean value',
+        );
+      });
+  });
+
+  test('Expect error to be raised if dob does not match age', () => {
+    return request(app.getHttpServer())
+      .post('/info/validateUser')
+      .send({ name: 'radu c', age: 20, married: false, dob: '1994-03-14' })
+      .expect(400)
+      .expect(({ body }) => {
+        console.log(body);
+        expect(body).toHaveLength(1);
+        expect(body[0].constraints).toHaveProperty(
+          'dobMatchesAge',
+          'The date of birth does not match the age!',
         );
       });
   });
