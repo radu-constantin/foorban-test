@@ -97,4 +97,19 @@ describe('/info/validateUser POST', () => {
         );
       });
   });
+
+  test('Expect error to be raised if name is too short', () => {
+    return request(app.getHttpServer())
+      .post('/info/validateUser')
+      .send({ name: 'radu', age: 30, married: false, dob: '1994-03-14' })
+      .expect(400)
+      .expect(({ body }) => {
+        console.log(body);
+        expect(body).toHaveLength(1);
+        expect(body[0].constraints).toHaveProperty(
+          'minLength',
+          'The name must contain at least 5 characters!',
+        );
+      });
+  });
 });
