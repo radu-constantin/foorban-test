@@ -96,21 +96,32 @@ export function CheckUser() {
       : null;
     return (
       <div>
-        {data?.success === true && <h1>DATI INVIATI VALIDI</h1>}
+        {data?.success === true && (
+          <>
+            <h1>DATI INVIATI VALIDI</h1>
+            <button
+              onClick={() => {
+                setStatus("INITIAL");
+                resetUserData();
+              }}
+            >
+              INVIA UN ALTRO VALORE
+            </button>
+          </>
+        )}
         {data?.success === false && (
           <>
             <h1>DATI INVIATI NON VALIDI</h1>
             {messages}
+            <button
+              onClick={() => {
+                setStatus("INITIAL");
+              }}
+            >
+              INVIA UN ALTRO VALORE
+            </button>
           </>
         )}
-        <button
-          onClick={() => {
-            setStatus("INITIAL");
-            resetUserData();
-          }}
-        >
-          INVIA UN ALTRO VALORE
-        </button>
       </div>
     );
   }
@@ -147,8 +158,8 @@ export function CheckUser() {
         ></input>
       </div>
 
-      <fieldset>
-        <legend>Married:</legend>
+      <div>
+        <label>Married: </label>
         <label>False</label>
         <input
           type="radio"
@@ -173,7 +184,7 @@ export function CheckUser() {
             });
           }}
         ></input>
-      </fieldset>
+      </div>
       <label style={label as React.CSSProperties}>Date of birth:</label>
       <input
         style={input as React.CSSProperties}
@@ -187,17 +198,22 @@ export function CheckUser() {
         }}
       ></input>
 
-      <button onClick={() => setStatus("SEND_DATA")}>VALIDA</button>
+      <button
+        style={button as React.CSSProperties}
+        onClick={() => setStatus("SEND_DATA")}
+      >
+        VALIDA
+      </button>
     </form>
   );
 }
 
 const form = {
   display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
+  justifyContent: "flex-start",
+  alignItems: "flex-start",
   flexDirection: "column",
-  width: "40vw",
+  // width: "40vw",
   border: "1px solid black",
   borderRadius: "10px",
   padding: "20px",
@@ -212,11 +228,15 @@ const label = {
 
 const input = {
   display: "inline-block",
-  minWidth: "5vw",
+  minWidth: "3vw",
 };
 
 const ageInput = {
   display: "inline-block",
   minWidth: "40px",
   width: "2vw",
+};
+
+const button = {
+  alignSelf: "center",
 };
