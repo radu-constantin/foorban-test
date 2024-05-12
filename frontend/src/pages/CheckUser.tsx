@@ -10,10 +10,10 @@ export function CheckUser() {
     | "ERROR_SENDING_DATA"
   >();
   const [userData, setUserData] = useState<ValidateUserRequest>({
-    name: undefined,
-    age: undefined,
-    married: undefined,
-    dob: undefined,
+    name: "",
+    age: "",
+    married: "",
+    dob: "",
   });
   const [data, setData] = useState<BaseResponse>();
 
@@ -25,6 +25,14 @@ export function CheckUser() {
     } else {
       return undefined;
     }
+  }
+
+  function extractMessagesFromResponse(response: BaseResponse) {
+    const errors = response.errors;
+    const messages = errors?.map((error) =>
+      error.constraints ? Object.values(error.constraints) : null
+    );
+    return messages?.flat();
   }
 
   useEffect(() => {
@@ -41,8 +49,10 @@ export function CheckUser() {
           if ([200, 201].includes(rawResponse.status)) {
             return rawResponse.json();
           } else {
-            rawResponse.json().then((response) => setData(response));
-            throw new Error();
+            return rawResponse.json().then((response) => {
+              setData(response);
+              throw new Error();
+            });
           }
         })
         .then((response: BaseResponse) => {
@@ -56,26 +66,15 @@ export function CheckUser() {
   }, [status, userData]);
 
   if (status === "ERROR_SENDING_DATA") {
-    const constraints = data?.errors?.map((error) => {
-      return error.constraints;
-    });
-
-    const messages = constraints
-      ?.map((constraint) => {
-        //@ts-ignore
-        return Object.values(constraint);
-      })
-      .flat();
-
+    console.log(data && extractMessagesFromResponse(data));
     return (
       <div>
         <h1>ERRORE INVIO DATI</h1>
-        {
-          //@ts-ignore
-          messages.map((message) => {
-            return <p>{message}</p>;
-          })
-        }
+        {data
+          ? extractMessagesFromResponse(data)?.map((message) => (
+              <p>{message}</p>
+            ))
+          : null}
         <button onClick={() => setStatus("INITIAL")}>RIPROVA</button>
       </div>
     );
@@ -103,7 +102,7 @@ export function CheckUser() {
   }
 
   return (
-    <form style={form}>
+    <form style={form as React.CSSProperties}>
       <div>
         <label>Name:</label>
         <input
@@ -178,9 +177,9 @@ export function CheckUser() {
 
 const form = {
   display: "flex",
-  "justify-content": "center",
-  "align-items": "center",
-  "flex-direction": "column",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
   width: "50vw",
   border: "1px solid black",
   gap: "10px",

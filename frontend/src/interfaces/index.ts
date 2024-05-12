@@ -15,8 +15,8 @@ export interface UpdateInfoRequest {
 
 export interface ValidateUserRequest {
   name: string | undefined;
-  age: number | undefined;
-  married: boolean | undefined;
+  age: string | number | undefined;
+  married: string | boolean | undefined;
   dob: string | undefined;
 }
 
