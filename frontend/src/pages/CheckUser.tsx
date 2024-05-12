@@ -41,6 +41,7 @@ export function CheckUser() {
           if ([200, 201].includes(rawResponse.status)) {
             return rawResponse.json();
           } else {
+            rawResponse.json().then((response) => setData(response));
             throw new Error();
           }
         })
@@ -55,9 +56,26 @@ export function CheckUser() {
   }, [status, userData]);
 
   if (status === "ERROR_SENDING_DATA") {
+    const constraints = data?.errors?.map((error) => {
+      return error.constraints;
+    });
+
+    const messages = constraints
+      ?.map((constraint) => {
+        //@ts-ignore
+        return Object.values(constraint);
+      })
+      .flat();
+
     return (
       <div>
         <h1>ERRORE INVIO DATI</h1>
+        {
+          //@ts-ignore
+          messages.map((message) => {
+            return <p>{message}</p>;
+          })
+        }
         <button onClick={() => setStatus("INITIAL")}>RIPROVA</button>
       </div>
     );
@@ -85,29 +103,35 @@ export function CheckUser() {
   }
 
   return (
-    <form>
-      <label>Name:</label>
-      <input
-        type="text"
-        value={userData.name}
-        onChange={(e) => {
-          setUserData({
-            ...userData,
-            name: e.target.value,
-          });
-        }}
-      ></input>
-      <label>Age:</label>
-      <input
-        type="number"
-        value={userData.age}
-        onChange={(e) => {
-          setUserData({
-            ...userData,
-            age: Number(e.target.value),
-          });
-        }}
-      ></input>
+    <form style={form}>
+      <div>
+        <label>Name:</label>
+        <input
+          type="text"
+          value={userData.name}
+          onChange={(e) => {
+            setUserData({
+              ...userData,
+              name: e.target.value,
+            });
+          }}
+        ></input>
+      </div>
+
+      <div>
+        <label>Age:</label>
+        <input
+          type="number"
+          value={userData.age}
+          onChange={(e) => {
+            setUserData({
+              ...userData,
+              age: Number(e.target.value),
+            });
+          }}
+        ></input>
+      </div>
+
       <fieldset>
         <legend>Married:</legend>
         <label>False</label>
@@ -151,3 +175,13 @@ export function CheckUser() {
     </form>
   );
 }
+
+const form = {
+  display: "flex",
+  "justify-content": "center",
+  "align-items": "center",
+  "flex-direction": "column",
+  width: "50vw",
+  border: "1px solid black",
+  gap: "10px",
+};
