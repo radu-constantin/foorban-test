@@ -118,8 +118,9 @@ export function CheckUser() {
   return (
     <form style={form as React.CSSProperties}>
       <div>
-        <label>Name:</label>
+        <label style={label as React.CSSProperties}>Name:</label>
         <input
+          style={input as React.CSSProperties}
           type="text"
           value={userData.name}
           onChange={(e) => {
@@ -132,8 +133,9 @@ export function CheckUser() {
       </div>
 
       <div>
-        <label>Age:</label>
+        <label style={label as React.CSSProperties}>Age:</label>
         <input
+          style={ageInput as React.CSSProperties}
           type="number"
           value={userData.age}
           onChange={(e) => {
@@ -172,8 +174,9 @@ export function CheckUser() {
           }}
         ></input>
       </fieldset>
-      <label>Date of birth:</label>
+      <label style={label as React.CSSProperties}>Date of birth:</label>
       <input
+        style={input as React.CSSProperties}
         type="date"
         value={userData.dob}
         onChange={(e) => {
@@ -200,4 +203,20 @@ const form = {
   padding: "20px",
   marginTop: "20px",
   gap: "10px",
+};
+
+const label = {
+  display: "inline-block",
+  minWidth: "5vw",
+};
+
+const input = {
+  display: "inline-block",
+  minWidth: "5vw",
+};
+
+const ageInput = {
+  display: "inline-block",
+  minWidth: "40px",
+  width: "2vw",
 };
