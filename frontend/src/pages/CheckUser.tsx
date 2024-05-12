@@ -17,6 +17,15 @@ export function CheckUser() {
   });
   const [data, setData] = useState<BaseResponse>();
 
+  function resetUserData() {
+    setUserData({
+      name: "",
+      age: "",
+      married: "",
+      dob: "",
+    });
+  }
+
   function convertStringToBoolean(string: string) {
     if (string === "true") {
       return true;
@@ -30,7 +39,7 @@ export function CheckUser() {
   function extractMessagesFromResponse(response: BaseResponse) {
     const errors = response.errors;
     const messages = errors?.map((error) =>
-      error.constraints ? Object.values(error.constraints) : null
+      error.constraints ? Object.values(error.constraints).slice(-1) : null
     );
     return messages?.flat();
   }
@@ -49,10 +58,7 @@ export function CheckUser() {
           if ([200, 201].includes(rawResponse.status)) {
             return rawResponse.json();
           } else {
-            return rawResponse.json().then((response) => {
-              setData(response);
-              throw new Error();
-            });
+            throw new Error();
           }
         })
         .then((response: BaseResponse) => {
@@ -70,11 +76,6 @@ export function CheckUser() {
     return (
       <div>
         <h1>ERRORE INVIO DATI</h1>
-        {data
-          ? extractMessagesFromResponse(data)?.map((message) => (
-              <p>{message}</p>
-            ))
-          : null}
         <button onClick={() => setStatus("INITIAL")}>RIPROVA</button>
       </div>
     );
@@ -90,11 +91,24 @@ export function CheckUser() {
   }
 
   if (status === "DATA_SENDED") {
+    const messages = data
+      ? extractMessagesFromResponse(data)?.map((message) => <p>{message}</p>)
+      : null;
     return (
       <div>
         {data?.success === true && <h1>DATI INVIATI VALIDI</h1>}
-        {data?.success === false && <h1>DATI INVIATI NON VALIDI</h1>}
-        <button onClick={() => setStatus("INITIAL")}>
+        {data?.success === false && (
+          <>
+            <h1>DATI INVIATI NON VALIDI</h1>
+            {messages}
+          </>
+        )}
+        <button
+          onClick={() => {
+            setStatus("INITIAL");
+            resetUserData();
+          }}
+        >
           INVIA UN ALTRO VALORE
         </button>
       </div>
@@ -180,7 +194,10 @@ const form = {
   justifyContent: "center",
   alignItems: "center",
   flexDirection: "column",
-  width: "50vw",
+  width: "40vw",
   border: "1px solid black",
+  borderRadius: "10px",
+  padding: "20px",
+  marginTop: "20px",
   gap: "10px",
 };

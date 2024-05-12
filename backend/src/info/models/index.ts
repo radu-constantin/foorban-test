@@ -25,7 +25,9 @@ export class ValidateUserRequest implements ValidateUserRequestInterface {
   @IsNotEmpty({
     message: 'You must enter a name!',
   })
-  @IsString()
+  @IsString({
+    message: 'The name must be a string of characters',
+  })
   @MinLength(5, {
     message: 'The name must contain at least 5 characters!',
   })
@@ -34,16 +36,23 @@ export class ValidateUserRequest implements ValidateUserRequestInterface {
   })
   name: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'You must enter an age!',
+  })
   @IsNumber()
   age: number;
 
   @ValidateIf((user) => user.age >= 18)
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message:
+      "The 'married' field is mandatory for persons that are over 18 years of age!",
+  })
   @IsBoolean()
   married: boolean;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'You must enter a date of birth!',
+  })
   @IsDateString()
   @dobMatchesAge('age', {
     message: 'The date of birth does not match the age!',

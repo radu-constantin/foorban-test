@@ -33,7 +33,9 @@ function Layout() {
         </ul>
       </nav>
       <hr />
-      <Outlet />
+      <main style={main as React.CSSProperties}>
+        <Outlet />
+      </main>
     </div>
   );
 }
@@ -48,3 +50,8 @@ function NoMatch() {
     </div>
   );
 }
+
+const main = {
+  display: "flex",
+  justifyContent: "center",
+};

@@ -23,11 +23,6 @@ export class InfoController {
   async validateUser(
     @Body() bodyRequest: ValidateUserRequest,
   ): Promise<BaseResponse> {
-    const response = await this.infoService.validateUser(bodyRequest);
-    if (response.errors) {
-      throw new HttpException(response, HttpStatus.BAD_REQUEST);
-    } else {
-      return response;
-    }
+    return this.infoService.validateUser(bodyRequest);
   }
 }
